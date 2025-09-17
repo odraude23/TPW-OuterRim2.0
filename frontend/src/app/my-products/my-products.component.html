@@ -1,0 +1,15 @@
+<div class="jumbotron text-align text-center" style="margin-top: 90px;">
+    <h1>Your Products</h1>
+    <p class="lead">Here are the products you have listed.</p>
+</div>
+
+<div class="container mb-3">
+  <div class="mb-4">
+      <button class="btn btn-secondary btn-lg " routerLink="/add-product" > <!-- (click)="window.location.href='/addproduct'" -->
+        Add a Product
+      </button>
+  </div>
+    
+  <app-product-box [products]="products"></app-product-box>
+</div>
+  

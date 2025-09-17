@@ -1,0 +1,140 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8 mx-auto">
+            <h2 class="h3 mb-3 text-center">Account Settings</h2>
+
+            <!-- Profile Summary and Image Update -->
+            <div class="text-center mb-3">
+                <img src="{{ user.get_image }}" alt="Profile Picture" class="rounded-circle profile-img"   
+                        style="width: 120px; height: 120px; object-fit: cover;">
+            </div>
+            <h4 class="text-center">{{ user.name }}</h4>
+            <p class="text-center text-muted">{{ at }}{{ user.username }}</p>
+            <p *ngIf="user.description" class="text-center">{{ user.description }}</p>
+            <p *ngIf="!user.description" class="text-center">No description yet</p>
+        </div>
+    </div>
+
+    <form class="mt-3" [formGroup]="updatePicForm" (ngSubmit)="pictureSubmit()">
+        <div class="row mb-4">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <!--Update Profile Picture-->
+                <input type="file" name="image" accept="image/*" class="form-control" formControlName="image" (change)="onFileSelected($event)">
+                <div *ngIf="updatePicForm.get('image')?.errors?.['required'] && updatePicForm.get('image')?.touched" class="alert alert-danger"
+                      style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                  Please select an image.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Update Profile Picture">
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+    <hr class="my-4" />
+    <form [formGroup]="updateProfileForm" (ngSubmit)="profileSubmit()">
+        <div class="form-row">
+            <label for="inputName">Name</label>
+            <input type="text" class="form-control" id="inputName" name="name" value="{{ user.name }}" formControlName="name">
+
+            <label for="inputUsername">Username</label>
+            <input type="text" class="form-control" id="inputUsername" name="username" value="{{ user.username }}" formControlName="username">
+
+            <label for="inputEmail">Email</label>
+            <input type="email" class="form-control" id="inputEmail" name="email" value="{{ user.email }}" formControlName="email">
+
+            <label for="inputDescription">Description</label>
+            <textarea class="form-control" id="inputDescription" name="description" rows="3" placeholder="Write something about yourself..." style="resize: none" formControlName="description">{{ user.description }}</textarea>
+        </div>
+        <hr class="my-4" />
+        <div class="text-center mb-3">
+            <button type="button" class="btn btn-primary" name="profile_change" (click)="profileSubmit()">Save Change</button>
+            <button type="button" name="password_change" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#firstModal" style="margin-left: 10px">
+            Change Password
+            </button>
+            <button type="button" name="delete_account" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#secondModal" style="margin-left: 10px">
+            Delete Account
+            </button>
+        </div>
+    </form>
+    <button class="btn btn-secondary mt-3 mb-2" (click)="goBack()">Back</button>
+
+    <!-- Password Modal -->
+    <div class="modal fade" id="firstModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Changing the password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form [formGroup]="updatePasswordForm" (ngSubmit)="passwordSubmit()">
+            <div class="modal-body">
+                <div class="form-row">
+                <label for="inputOldPassword">Old Password</label>
+                <input type="password" class="form-control" id="inputOldPassword" name="oldPassword" placeholder="Old Password" formControlName="oldPassword">
+                <!-- Error message -->
+                <div *ngIf="updatePasswordForm.get('oldPassword')?.errors?.['required'] && updatePasswordForm.get('oldPassword')?.touched" class="alert alert-danger"
+                        style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                    Please enter your old password.
+                </div>
+
+                <label for="inputNewPassword">New Password</label>
+                <input type="password" class="form-control" id="inputNewPassword" name="newPassword" placeholder="New Password" formControlName="newPassword">
+                <!-- Error message -->
+                <div *ngIf="updatePasswordForm.get('newPassword')?.errors?.['required'] && updatePasswordForm.get('newPassword')?.touched" class="alert alert-danger"
+                        style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                    Please enter your new password.
+                </div>
+
+                <label for="inputConfirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword">
+                <!-- Error message -->
+                <div *ngIf="updatePasswordForm.get('confirmPassword')?.errors?.['required'] && updatePasswordForm.get('confirmPassword')?.touched" class="alert alert-danger"
+                        style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                    Please confirm your new password.
+                </div>
+                </div>
+            </div>
+
+            <!-- Password not match error message -->
+            <div *ngIf="passwordMismatch" class="alert alert-danger"
+                    style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                Passwords do not match.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" name="password_change" (click)="passwordSubmit()">Confirm Changes</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="secondModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel2">Deleting your account</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="." method="post">
+            <div class="modal-body">
+                <div class="form-row">
+                Are you sure you want to delete your account?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" name="delete_account" (click)="deleteAccount()">Delete Account</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

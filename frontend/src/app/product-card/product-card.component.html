@@ -1,0 +1,64 @@
+<div *ngIf="product" class="product-card rounded shadow-sm p-3 border mt-4" 
+     style="height: 550px; display: flex; flex-direction: column; justify-content: space-between;">
+    <!-- Product Image -->
+    <img [src]="product.image" [alt]="product.name" class="img-fluid rounded mb-3" 
+         style="width: 100%; height: 300px; object-fit: contain;">
+  
+    <!-- Product Info -->
+    <div class="info">
+      <h3 class="fw-bold">{{ product.name }}</h3>
+      <p class="text-muted">Price: ${{ product.price }}</p>
+      <p class="text-muted">Seller: {{ product.user.name }}</p>
+    </div>
+    
+    <div *ngIf="!nologin">
+    <!-- Buttons at the bottom -->
+      <div class="d-flex justify-content-between mt-auto">
+      <!-- Open Product -->
+        <button [routerLink]="['/product-detail', product.id]" class="btn btn-info flex-grow-1 me-1">
+          Open
+        </button>
+  
+      <!-- Add to Favorites -->
+        <button *ngIf="shouldShowFavoriteButton() && !isCartPage" 
+              class="btn btn-primary w-100 me-1" 
+              (click)="toggleFavorite()">
+          {{ is_in_favorites ? '❤️ Remove from Favorites' : '❤️ Add to Favorites' }}
+        </button>
+
+      <!-- Buttons for My Products -->
+      <ng-container *ngIf="isMyProductsPage">
+        <!-- Edit Product -->
+        <button [routerLink]="['/edit-product', product.id]" class="btn btn-warning flex-grow-1 me-1 w-100">
+          ✏️ Edit
+        </button>
+
+        <!-- Delete Product -->
+        <button class="btn btn-danger w-100" (click)="deleteProduct()">
+          🗑️ Delete
+        </button>
+      </ng-container>
+
+      <!-- Buttons for cart -->
+      <ng-container *ngIf="isCartPage">
+        <!-- Remove from Cart -->
+        <button class="btn btn-danger w-100" (click)="removeFromCart(product.id, user.id)">
+          🗑️ Remove
+        </button>
+      </ng-container>
+
+    </div>
+    </div>
+    <div *ngIf="nologin">
+      <div class="d-flex justify-content-between mt-auto">
+        <button routerLink="/login" class="btn btn-info flex-grow-1 me-1">
+          Open
+        </button>      
+    
+        <button class="btn btn-primary w-100" routerLink="/login">
+          ❤️ Add to Favorites
+        </button>
+      </div>
+    </div>
+  </div>
+  

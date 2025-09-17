@@ -1,0 +1,21 @@
+<div class="jumbotron text-align text-center" style="margin-top: 90px;">
+    <h1>Following</h1>
+    <p class="lead">Discover products from users you're following.</p>
+</div>
+<div class="container">
+    <div *ngIf="followedProducts.length; else noFollowing" class="row">
+        <div *ngFor="let entry of followedProducts" class="col-12 mb-4 mt-2">
+            <div class="row d-flex align-items-end">
+                <h2 class="col-md-4">{{ entry.user }}</h2>
+                <div class="col-md-6"></div>
+                <button class="btn btn-primary col-md-2" routerLink="/seller/profile/{{ entry.user }}">View Profile</button>
+            </div>
+            <hr />
+            <app-product-box [products]="entry.products"></app-product-box>
+        </div>
+    </div>
+</div>
+
+<ng-template #noFollowing>
+    <p class="text-center">You are not following any users with available products.</p>
+</ng-template>

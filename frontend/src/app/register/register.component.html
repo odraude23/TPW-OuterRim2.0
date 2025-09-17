@@ -1,0 +1,62 @@
+<div class="background-image">
+<div class="row justify-content-center">
+    <div class="container d-flex justify-content-center align-items-center">
+        <section id="registerForm">
+            <form [formGroup]="register_form" (ngSubmit)="register()" class="form-horizontal">
+                <h4>Create a new account</h4>
+                <hr />
+                <div class="form-group">
+                    <label for="username" class="form-label text-center">Username</label>
+                    <input type="text" formControlName="username" class="form-control">
+                    <div *ngIf="register_form.get('username')?.invalid && register_form.get('username')?.touched" class="text-danger">
+                        <div *ngIf="register_form.get('username')?.errors?.['required']">Username is required.</div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label text-center">Name</label>
+                    <input type="text" formControlName="name" class="form-control">
+                    <div *ngIf="register_form.get('name')?.invalid && register_form.get('name')?.touched" class="text-danger">
+                        <div *ngIf="register_form.get('name')?.errors?.['required']">Name is required.</div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label text-center">Email</label>
+                    <input type="text" formControlName="email" class="form-control">
+                    <div *ngIf="register_form.get('email')?.invalid && register_form.get('email')?.touched" class="text-danger">
+                        <div *ngIf="register_form.get('email')?.errors?.['required']">Email is required.</div>
+                        <div *ngIf="register_form.get('email')?.errors?.['email']">Email must be a valid email address.</div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label text-center">Password</label>
+                    <input type="password" formControlName="password" class="form-control">
+                    <div *ngIf="register_form.get('password')?.invalid && register_form.get('password')?.touched" class="text-danger">
+                        <div *ngIf="register_form.get('password')?.errors?.['required']">Password is required.</div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="confirm_password" class="form-label text-center">Confirm Password</label>
+                    <input type="password" formControlName="confirm_password" class="form-control">
+                    <div *ngIf="register_form.get('confirm_password')?.invalid && register_form.get('confirm_password')?.touched" class="text-danger">
+                        <div *ngIf="register_form.get('confirm_password')?.errors?.['required']">Confirm Password is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 mx-auto">
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </div>
+                </div>
+                <div *ngIf="invalid" class="text-danger">
+                    Invalid credentials.
+                </div>
+                <div *ngIf="password_mismatch" class="text-danger">
+                    Passwords do not match.
+                </div>
+                <div *ngIf="username_exists" class="text-danger">
+                    Username already exists.
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+</div>

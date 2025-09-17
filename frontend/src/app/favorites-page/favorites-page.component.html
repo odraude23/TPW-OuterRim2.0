@@ -1,0 +1,12 @@
+<div class="jumbotron text-align text-center" style="margin-top: 90px;">
+    <h1>Your Favorite Products</h1>
+    <p class="lead">Here are the products you have marked as favorites.</p>
+</div>
+  
+<div *ngIf="products.length === 0" class="text-center mt-4">
+    <h4>have no favorite products yet.</h4> 
+</div>
+
+<div class="container mb-2">
+    <app-product-box [products]="products"></app-product-box>
+</div>  

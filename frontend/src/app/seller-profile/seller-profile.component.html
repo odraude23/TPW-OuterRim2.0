@@ -1,0 +1,33 @@
+<div class="container">
+    <app-profile-header [user]="user" [comments]="comments" [seller]="true"></app-profile-header>
+
+    <hr class="my-3">
+    <form [formGroup]="comment_form" class="mb-5">
+        <input type="hidden" name="action" value="comment">
+        <div class="row mb-2 ">
+            <div class="col-md-8">
+                <label for="commentText" class="form-label">Leave a comment</label>
+                <textarea name="text" id="commentText" style="min-width: 90%;" class="form-control" rows="4" formControlName="comment" placeholder="Insert your comment here" required></textarea>
+            </div>
+            <div class="col-md-4">
+                <label for="commentRating" class="form-label">Rating</label>
+                <select name="rating" id="commentRating" formControlName="rating_input" class="form-select" style="min-width: 100%;" required>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-3" (click)="commentSubmit()">Submit Comment</button>
+            </div>          
+        </div>
+        <div *ngIf="commentError" class="alert alert-danger">
+            To post a comment, you must write something.
+        </div>
+        <div *ngIf="ratingError" class="alert alert-danger">
+            To post a comment, you must give a rating.
+        </div>
+    </form>
+    <hr class="my-3">
+    <button class="btn btn-secondary mb-2" (click)="goBack()">Back</button>
+</div>

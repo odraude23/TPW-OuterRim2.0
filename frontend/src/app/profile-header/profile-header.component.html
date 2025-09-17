@@ -1,0 +1,42 @@
+<div class="row mt-5">
+    <div class="col-md-4">
+        <img src="{{ user.get_image }}" class="img-fluid rounded-circle" alt="{{ user.username }}'s Profile Picture" style="object-fit: cover; width: 100%; height: 100%;">
+    </div>
+    <div class="col-md-8">
+        <h3>{{ user.name }}</h3>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Products Sold:</strong> {{ user.sold }}</p>
+        <p *ngIf="user.description"><strong>About:</strong> {{ user.description }}</p>
+        <p *ngIf="!user.description"><strong>About:</strong> No description yet</p>
+        <p><strong>Followers:</strong> {{ followers }}</p>
+        <p><strong>Following:</strong> {{ following }}</p>
+        <div *ngIf="seller">
+            <div id="follow_{{ user.id }}" class="mb-2" *ngIf="!isFollowing">
+                <button type="submit" class="btn btn-primary" name="follow" (click)="changeFollow()"><i class="bi bi-person-add"></i> Follow</button>
+            </div>
+            <div id="follow_{{ user.id }}" class="mb-2" *ngIf="isFollowing">
+                <button type="submit" class="btn btn-secondary" name="unfollow" (click)="changeFollow()"><i class="bi bi-person-dash"></i> Unfollow</button>
+            </div>
+        </div>
+        <div *ngIf="owner">
+            <button class="btn btn-secondary" routerLink="/profile/settings">Edit Profile</button>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-5">Comments for {{ user.username }}</h4>
+<div class="comments-section mb-4">
+    <div *ngIf="comments.length > 0">
+        <div *ngFor="let comment of comments" class="comment mb-3 p-3 border rounded">
+            <p><strong>{{ comment.user.username }}</strong> rated <strong>{{ comment.rating }}/5</strong></p>
+            <p>{{ comment.text }}</p>
+        </div>
+    </div>
+    <div *ngIf="comments.length == 0">
+        <p class="text-muted">No comments available for this user.</p>
+    </div>
+</div>
+
+<h4 class="mt-5">Products by {{ user.username }}</h4>
+<app-product-box [products]="products"></app-product-box>

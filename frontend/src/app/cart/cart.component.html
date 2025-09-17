@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="jumbotron text-align text-center">
+        <h1>Your Cart</h1>
+        <p class="lead">Review your selected Star Wars items before checkout.</p>
+    </div>
+
+    <app-product-box [products]="products"></app-product-box>
+
+    <hr class="my-3" />
+    <div class="total d-flex justify-content-between align-items-center mt-1 px-3 mb-3">
+        <!-- Total Value on the Left -->
+        <h3 class="fw-bold mb-0">Total Value: ${{ total }}</h3>
+        
+        <!-- Checkout Button on the Right -->
+        <button class="btn btn-primary btn-lg" routerLink="/checkout" [disabled]="products.length === 0">Checkout</button>
+    </div>
+</div>

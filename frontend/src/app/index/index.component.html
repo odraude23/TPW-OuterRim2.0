@@ -1,0 +1,58 @@
+<div class="jumbotron text-center" style="margin-top: 90px;">
+    <h1>Products</h1>
+    <p class="lead">Discover a variety of Star Wars items available for purchase.</p>
+</div>
+
+<!-- Filter Form -->
+<div class="search-container mb-4 d-flex justify-content-center">
+    <form (ngSubmit)="applyFilters()" class="row gx-3 align-items-end">
+        <div class="col-auto">
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Search"
+                [(ngModel)]="search"
+                name="search"
+            />
+        </div>
+        <div class="col-auto">
+            <select
+                class="form-select"
+                [(ngModel)]="category"
+                name="category"
+            >
+                <option value="">All Categories</option>
+                <option *ngFor="let categoryOption of categories" [value]="categoryOption">
+                    {{ categoryOption }}
+                </option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <input
+                type="number"
+                class="form-control"
+                placeholder="Min Price"
+                [(ngModel)]="minPrice"
+                name="minPrice"
+            />
+        </div>
+        <div class="col-auto">
+            <input
+                type="number"
+                class="form-control"
+                placeholder="Max Price"
+                [(ngModel)]="maxPrice"
+                name="maxPrice"
+            />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">🔍 Search</button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="resetFilters()">Reset</button>
+        </div>
+    </form>
+</div>
+
+<!-- Product Box -->
+<div class="container mb-4">
+    <app-product-box [products]="filteredProducts"></app-product-box>
+</div>

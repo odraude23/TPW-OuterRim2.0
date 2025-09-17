@@ -1,0 +1,160 @@
+{% extends "layout2.html" %}
+{% load static %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-md-4">
+            {% if user.get_image %}
+                <img src="{{ user.get_image }}" class="img-fluid rounded-circle" alt="{{ user.username }}'s Profile Picture" style="object-fit: cover; width: 100%; height: 100%;">
+            {% else %}
+                <img src="{% static 'default_profile.png' %}" class="img-fluid rounded-circle" alt="Default Profile Picture" style="object-fit: cover; width: 100%; height: 100%;">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h3>{{ user.name }}</h3>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Products Sold:</strong> {{ user.sold }}</p>
+            {% if user.description %}
+                <p><strong>About:</strong> {{ user.description }}</p>
+            {% else %}
+                <p class="text-muted">No description available.</p>
+            {% endif %}
+
+            <!-- Dummy Button for Own Profile -->
+            {% if is_own_profile %}
+                <button class="btn btn-secondary mt-3" onclick="window.location.href='{% url 'profile_settings' %}'">Edit Profile</button>
+            {% else %}
+                <!-- Follow/Unfollow Button -->
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_follow">
+                    {% if is_following %}
+                        <button type="submit" class="btn btn-danger mt-3">Unfollow</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary mt-3">Follow</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Comments Section and other sections follow -->
+<h4 class="mt-5">Comments for {{ user.username }}</h4>
+<div class="comments-section mb-4">
+    {% if comments_received %}
+        {% for comment in comments_received %}
+            <div class="comment mb-3 p-3 border rounded">
+                <p><strong>{{ comment.user.username }}</strong> rated <strong>{{ comment.rating }}/5</strong></p>
+                <p>{{ comment.text }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No comments available for this user.</p>
+    {% endif %}
+</div>
+
+<!-- New Comment Form -->
+{% if not is_own_profile %}
+    <hr class="my-3">
+    <form method="post" action="" class="mb-5">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="comment">
+        <div class="row mb-2 ">
+            <div class="col-md-8">
+                <label for="commentText" class="form-label">Leave a comment</label>
+                <textarea name="text" id="commentText" style="min-width: 90%;" class="form-control" rows="4" placeholder="Insert your comment here" required></textarea>
+            </div>
+            <div class="col-md-4">
+                <label for="commentRating" class="form-label">Rating</label>
+                <select name="rating" id="commentRating" class="form-select" style="min-width: 100%;" required>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-3">Submit Comment</button>
+            </div>          
+        </div>
+    </form>
+    <hr class="my-3">
+{% endif %}
+
+<!-- Products Section by User -->
+<h4 class="mt-5">Products by {{ user.username }}</h4>
+<div class="row">
+    {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="product-card" style="height: 500px;">
+                <img src="{{ product.get_image }}" alt="{{ product.name }}" class="img-fluid" style="width: 100%; height: 300px; object-fit: contain; margin-bottom: 20px;">
+                <div class="info">
+                    <h5>{{ product.name }}</h5>
+                    <p>Price: ${{ product.price }}</p>
+                    <p>Seller: {{ product.user.name }}</p>
+                    <button class="btn btn-info" onclick="window.location.href='{% url 'product_details' product.id %}'">Open</button>
+                    {% if user.id != product.user.id %}
+                        <form method="post" action="{% url 'index' %}" style="display: inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            {% if user.is_authenticated and product.id in favorite_products %}
+                                <button type="submit" class="btn btn-danger">❤️ Remove from Favorites</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-primary">❤️ Add to Favorites</button>
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No products available from this user.</p>
+    {% endfor %}
+</div>
+
+<!-- Display Followers if Viewing Own Profile -->
+{% if is_own_profile %}
+    <h4 class="mt-4">Followers</h4>
+    <div class="followers-section mb-4 p-3 rounded shadow-sm bg-light">
+    {% if followers %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for follower in followers %}
+                <div class="col">
+                    <div class="card h-100">
+                        <form method="post" action=".">
+                            <a href="{% url 'user_detail' follower.id %}">
+                                <div class="row g-0">
+                                    <!-- Profile Image -->
+                                    <div class="col-md-4">
+                                        <img src="{{ follower.get_image }}" alt="{{ follower.username }}" class="img-fluid rounded-start" style="object-fit: cover; width: 100%; height: 100%;">
+                                </a>
+                                </div>
+                                <!-- Follower Details -->
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ follower.username }}</h5>
+                                        <p class="card-text"><strong>Email:</strong> {{ follower.email }}</p>
+                                        <p class="card-text"><strong>Description:</strong> {{ follower.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted text-center">You have no followers yet.</p>
+    {% endif %}
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,53 @@
+<div class="container" style="margin-top: 90px;">
+    <h1 class="display-4">{{ product?.name }}</h1>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <img [src]="product?.image" alt="{{ product?.name }}" class="img-fluid rounded" style="max-width: 90%; height: auto; object-fit: contain;">
+        </div>
+        <div class="col-md-6">
+            <div class="product-details">
+                <p><strong>Description:</strong> <span class="text-muted"> {{ product?.description }}</span></p>
+                <p><strong>Price:</strong> <span class="text-success"> ${{ product?.price }}</span></p>
+                <p><strong>Seller:</strong> {{ product?.user?.name }}</p>
+                <p><strong>Category:</strong> {{ product?.category }}</p>
+                <p><strong>Brand:</strong> {{ product?.brand }}</p>
+                <p><strong>Color:</strong> {{ product?.color }}</p>
+                <p><strong>Seen:</strong> <span class="text-muted"> {{ product?.seen }}</span></p>
+                <hr class="my-2">
+
+                <div *ngIf="user?.id !== product?.user?.id">
+                    <div class="d-flex gap-2 mt-3">
+                        <button (click)="addToCart()" class="btn btn-lg btn-info" [disabled]="is_in_cart">
+                            {{ is_in_cart ? 'Already in Cart' : 'Add to Cart' }}
+                        </button>
+                        <button (click)="toggleFavorite()" class="btn btn-lg btn-primary">
+                            {{ is_in_favorites ? '❤️ Remove from Favorites' : '❤️ Add to Favorites' }}
+                        </button>
+                    </div>
+                    <button class="btn btn-lg btn-secondary mt-3" routerLink="/seller/profile/{{ product?.user?.username }}">
+                        View Seller's Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="product?.user?.id !== user?.id">
+        <h2 class="mt-2">Send a Message to the Seller</h2>
+        <form (submit)="sendMessage()">
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" [(ngModel)]="message" name="message" class="form-control" rows="3" placeholder="Write your message here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary mt-3">Send Message</button>
+        </form>
+    
+        <hr class="my-3">
+            <div *ngIf="recommendedProducts.length > 0" class="mt-4">
+                <h2>Same category products</h2>
+                <app-product-box [products]="recommendedProducts"></app-product-box>
+            </div>
+        <hr class="my-3">
+    </div>
+    <button class="btn btn-secondary mb-2 mt-3" (click)="goBack()">Back</button>
+</div>
